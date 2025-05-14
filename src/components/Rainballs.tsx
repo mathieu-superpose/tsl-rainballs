@@ -18,7 +18,13 @@ function Rainballs() {
           row - HEIGHT / 2,
           0
         )
-        b.push(<Ball key={`${row}-${col}`} initialPosition={initialPosition} />)
+        b.push(
+          <Ball
+            key={`${row}-${col}`}
+            initialPosition={initialPosition}
+            index={row + col}
+          />
+        )
       }
     }
     return b
