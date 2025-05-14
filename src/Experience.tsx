@@ -14,7 +14,7 @@ function Experience() {
         <Canvas
           className="!fixed inset-0"
           performance={{ min: 0.5, debounce: 300 }}
-          camera={{ position: [0, 0, 5], far: 20 }}
+          camera={{ position: [0, 0, 10], far: 20 }}
           gl={async (props) => {
             console.warn("WebGPU is supported")
             const renderer = new THREE.WebGPURenderer(

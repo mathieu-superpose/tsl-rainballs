@@ -1,70 +1,30 @@
-import { Sphere } from "@react-three/drei"
-import { useFrame } from "@react-three/fiber"
-import { type FC, useMemo, useState } from "react"
-import { MathUtils } from "three"
-import { color, mix, uv, positionWorld, uniform, vec3 } from "three/tsl"
-import { MeshPhongNodeMaterial } from "three/webgpu"
+import * as THREE from "three"
 
-// Basic component showing how to add smooth hover interactivity with TSL
+import { useMemo } from "react"
 
-const RainBalls: FC = () => {
-  const [isPointerOver, setIsPointerOver] = useState(false)
+import Ball from "./Ball"
 
-  const { colorNode, positionNode, uHovered } = useMemo(() => {
-    // Define a uniform for the hover value
-    const uHovered = uniform(0.0)
+const HEIGHT = 10
+const WIDTH = 10
 
-    // Create color gradients on the Y axis (bottom to top of the sphere)
-    const defaultColor = mix(color("#3F4A4B"), color("#1A2526"), uv().y)
-    const hoverColor = mix(color("#14DCE9"), color("#B462D1"), uv().y)
+function Rainballs() {
+  const balls = useMemo(() => {
+    const b = []
 
-    // Mix between two default and hovered colors based on the hover value
-    const colorNode = mix(defaultColor, hoverColor, uHovered)
-
-    // Translate the sphere along the Z axis based on the hover value (0 - 1)
-    const positionNode = positionWorld.sub(vec3(0, 0, uHovered))
-
-    // Generate a key for the material so that it updates when this data changes
-    // (it won't in this scenario because useMemo has no dependencies)
-    const key = colorNode.uuid
-    return { key, colorNode, positionNode, uHovered }
+    for (let row = 0; row < HEIGHT; row++) {
+      for (let col = 0; col < WIDTH; col++) {
+        const initialPosition = new THREE.Vector3(
+          col - WIDTH / 2,
+          row - HEIGHT / 2,
+          0
+        )
+        b.push(<Ball key={`${row}-${col}`} initialPosition={initialPosition} />)
+      }
+    }
+    return b
   }, [])
 
-  // When hovered, smoothly transition to 1.0, otherwise back to 0.0
-  useFrame((_, delta) => {
-    uHovered.value = MathUtils.damp(
-      uHovered.value,
-      isPointerOver ? 1.0 : 0.0,
-      5,
-      delta
-    )
-  })
-
-  const material = useMemo(
-    () =>
-      new MeshPhongNodeMaterial({
-        colorNode,
-        positionNode,
-        shininess: 20,
-      }),
-    [colorNode, positionNode]
-  )
-
-  return (
-    <Sphere
-      position={[0, 0, 0]}
-      args={[1, 40, 40]}
-      onPointerEnter={() => {
-        document.body.style.cursor = "pointer"
-        setIsPointerOver(true)
-      }}
-      onPointerLeave={() => {
-        document.body.style.cursor = "auto"
-        setIsPointerOver(false)
-      }}
-      material={material}
-    ></Sphere>
-  )
+  return <group>{balls}</group>
 }
 
-export default RainBalls
+export default Rainballs
