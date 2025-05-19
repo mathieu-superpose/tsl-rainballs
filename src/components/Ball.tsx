@@ -14,18 +14,21 @@ function Ball({
   const meshRef = useRef<THREE.Mesh>(null)
 
   const material = useMemo(() => {
-    const mat = new THREE.MeshStandardNodeMaterial()
+    const mat = new THREE.NodeMaterial()
 
     // add uTime to the shader
-    mat.colorNode = rainbow()
+    // mat.colorNode = rainbow()
+    mat.fragmentNode = rainbow()
 
     return mat
   }, [])
 
   useFrame((_state, delta) => {
     if (meshRef.current) {
+      // ROTATE THE BALL
       meshRef.current.rotation.x += delta * 0.1 + ((index * 0.001) % 0.05)
       meshRef.current.rotation.y += delta * 0.05 + ((index * 0.001) % 0.05)
+      meshRef.current.rotation.z += delta * 0.04 + ((index * 0.001) % 0.05)
     }
   })
 

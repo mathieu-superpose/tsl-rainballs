@@ -6,6 +6,7 @@ import "./Experience.css"
 
 import RainBalls from "./components/Rainballs"
 import Environment from "./components/Environment"
+import { OrbitControls } from "@react-three/drei"
 
 function Experience() {
   return (
@@ -26,6 +27,8 @@ function Experience() {
         >
           <RainBalls />
           <Environment />
+
+          <OrbitControls />
         </Canvas>
       </div>
     </div>
